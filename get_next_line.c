@@ -6,35 +6,47 @@
 /*   By: gclausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 14:22:55 by gclausse          #+#    #+#             */
-/*   Updated: 2021/12/06 15:29:55 by gclausse         ###   ########.fr       */
+/*   Updated: 2021/12/06 17:37:02 by gclausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*get_one_line(char *str)
+static char	*get_one_line(char *cpy)
 {
 	int		i;
 	char	*s2;
 
 	i = 0;
-	while (str[i] && str[i] != '\n')
+	while (cpy[i] && cpy[i] != '\n')
 		i++;
 	s2 = malloc(sizeof(char) * (i + 2));
 	if (!s2)
 		return (NULL);
 	i = 0;
-	while (str[i] && str[i] != '\n')
+	while (cpy[i] && cpy[i] != '\n')
 	{
-		s2[i] = str[i];
+		s2[i] = cpy[i];
 		i++;
 	}
-	if (str[i] == '\n')
+	if (cpy[i] == '\n')
 		s2[i] = '\n';
 	s2[i++] = '\0';
 	return (s2);
 }
 
+char	*read_file(int fd, char *cpy)
+{
+	char		*buffer;
+	size_t		nbytes;
+
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer)
+		return (NULL);
+	nbytes = sizeof(buffer);
+	cpy = read(fd, buffer, nbytes);
+
+}
 
 
 char	*get_next_line(int fd)
