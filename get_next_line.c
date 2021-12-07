@@ -6,7 +6,7 @@
 /*   By: gclausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 14:22:55 by gclausse          #+#    #+#             */
-/*   Updated: 2021/12/07 17:12:47 by gclausse         ###   ########.fr       */
+/*   Updated: 2021/12/07 18:05:13 by gclausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ static int	is_a_line(char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (0);
 	while (str[i] && str[i] != '\n')
 		i++;
 	if (str[i] == '\n')
@@ -93,7 +95,8 @@ static char	*read_file(int fd, char *cpy)
 	if (!buffer)
 		return (NULL);
 	nbytes = 1;
-	while (is_a_line(buffer) == 0 && nbytes != 0)
+	buffer[0] = '\0';
+	while (is_a_line(cpy) == 0 && nbytes != 0)
 	{
 		nbytes = read (fd, buffer, BUFFER_SIZE);
 		if (nbytes == -1)
@@ -104,7 +107,8 @@ static char	*read_file(int fd, char *cpy)
 		buffer[nbytes] = '\0';
 		cpy = ft_strjoin(cpy, buffer);
 	}
-	free (buffer);
+	if (buffer != cpy)
+		free (buffer);
 	return (cpy);
 }
 
@@ -123,6 +127,7 @@ char	*get_next_line(int fd)
 	cpy = save_cpy(cpy);
 	return (line);
 }
+/*
 int	main()
 {
 	int	fd;
@@ -132,4 +137,4 @@ int	main()
 	return (0);
 
 
-}
+}*/
