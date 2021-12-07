@@ -6,7 +6,7 @@
 /*   By: gclausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 14:22:55 by gclausse          #+#    #+#             */
-/*   Updated: 2021/12/07 18:05:13 by gclausse         ###   ########.fr       */
+/*   Updated: 2021/12/07 19:22:07 by gclausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*get_one_line(char *cpy)
 	}
 	if (cpy[i] == '\n')
 	{
-		s2[i] = cpy[i];
+		s2[i] = '\n';
 		i++;
 	}
 	s2[i] = '\0';
@@ -57,7 +57,10 @@ static char	*save_cpy(char *cpy)
 	}
 	str = malloc(sizeof(char) * (ft_strlen(cpy) - i + 1));
 	if (!str)
+	{
+		free (cpy);
 		return (NULL);
+	}
 	i++;
 	j = 0;
 	while (cpy[i])
@@ -89,6 +92,7 @@ static int	is_a_line(char *str)
 static char	*read_file(int fd, char *cpy)
 {
 	char	*buffer;
+	char	*tmp;
 	int		nbytes;
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
@@ -105,7 +109,9 @@ static char	*read_file(int fd, char *cpy)
 			return (NULL);
 		}
 		buffer[nbytes] = '\0';
-		cpy = ft_strjoin(cpy, buffer);
+		tmp = cpy;
+		cpy = ft_strjoin(tmp, buffer);
+		free (tmp);
 	}
 	if (buffer != cpy)
 		free (buffer);
@@ -124,6 +130,11 @@ char	*get_next_line(int fd)
 	if (!cpy)
 		return (NULL);
 	line = get_one_line(cpy);
+	if (!line)
+	{
+		free (cpy);
+		return (NULL);
+	}
 	cpy = save_cpy(cpy);
 	return (line);
 }
