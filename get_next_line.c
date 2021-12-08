@@ -6,21 +6,12 @@
 /*   By: gclausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 14:22:55 by gclausse          #+#    #+#             */
-/*   Updated: 2021/12/08 14:52:27 by gclausse         ###   ########.fr       */
+/*   Updated: 2021/12/08 18:38:04 by gclausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <libc.h>
-/*
-static void	malloc_pbm(char *str)
-{
-	if (str != NULL)
-	{
-		free(str);
-		str = NULL;
-	}
-}*/
 
 static char	*get_one_line(char *cpy)
 {
@@ -47,6 +38,8 @@ static char	*get_one_line(char *cpy)
 		i++;
 	}
 	s2[i] = '\0';
+	printf("valeur de la ligne =%s \n", s2);
+
 	return (s2);
 }
 
@@ -61,7 +54,8 @@ static char	*save_cpy(char *cpy)
 		i++;
 	if (!cpy[i])
 	{
-		free(cpy);
+		if (cpy)
+			free(cpy);
 		return (NULL);
 	}
 	str = malloc(sizeof(char) * (ft_strlen(cpy) - i + 1));
@@ -79,7 +73,8 @@ static char	*save_cpy(char *cpy)
 		j++;
 	}
 	str[j] = '\0';
-	free (cpy);
+	if (cpy)
+		free (cpy);
 	return (str);
 }
 
@@ -109,7 +104,7 @@ static char	*read_file(int fd, char *cpy)
 		return (NULL);
 	nbytes = 1;
 	buffer[0] = '\0';
-	while (is_a_line(cpy) == 0 && nbytes != 0)
+	while (is_a_line(cpy) == 0 && nbytes > 0)
 	{
 		nbytes = read (fd, buffer, BUFFER_SIZE);
 		if (nbytes == -1)
@@ -120,23 +115,22 @@ static char	*read_file(int fd, char *cpy)
 		buffer[nbytes] = '\0';
 		if (cpy == NULL)
 			cpy = ft_strdup(buffer);
-		else
+		else if (buffer[0] != '\0')
 		{
 			tmp = ft_strjoin(cpy, buffer);
 			free (cpy);
 			cpy = tmp;
 		}
 	}
-	if (buffer != cpy)
+	if (cpy != buffer)	
 		free (buffer);
 	return (cpy);
 }
 
-
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*cpy;
+	static char	*cpy = NULL;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -146,20 +140,12 @@ char	*get_next_line(int fd)
 	line = get_one_line(cpy);
 	if (!line)
 	{
-		free (cpy);
+		if (cpy )
+			free (cpy);
+			printf("pointeur sur cpy si pas de ligne = %p\n", cpy);
 		return (NULL);
 	}
+	printf("pointeur sur cpy si ligne = %p\n", cpy);
 	cpy = save_cpy(cpy);
 	return (line);
 }
-/*
-int	main()
-{
-	int	fd;
-
-	fd = open("test", O_RDWR);
-	printf("resultat %s", get_next_line(fd));
-	return (0);
-
-
-}*/
