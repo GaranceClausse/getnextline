@@ -6,12 +6,21 @@
 /*   By: gclausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 14:22:55 by gclausse          #+#    #+#             */
-/*   Updated: 2021/12/07 19:22:07 by gclausse         ###   ########.fr       */
+/*   Updated: 2021/12/08 14:52:27 by gclausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <libc.h>
+/*
+static void	malloc_pbm(char *str)
+{
+	if (str != NULL)
+	{
+		free(str);
+		str = NULL;
+	}
+}*/
 
 static char	*get_one_line(char *cpy)
 {
@@ -109,9 +118,14 @@ static char	*read_file(int fd, char *cpy)
 			return (NULL);
 		}
 		buffer[nbytes] = '\0';
-		tmp = cpy;
-		cpy = ft_strjoin(tmp, buffer);
-		free (tmp);
+		if (cpy == NULL)
+			cpy = ft_strdup(buffer);
+		else
+		{
+			tmp = ft_strjoin(cpy, buffer);
+			free (cpy);
+			cpy = tmp;
+		}
 	}
 	if (buffer != cpy)
 		free (buffer);

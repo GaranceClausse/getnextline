@@ -6,7 +6,7 @@
 /*   By: gclausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 10:52:57 by gclausse          #+#    #+#             */
-/*   Updated: 2021/12/07 18:15:36 by gclausse         ###   ########.fr       */
+/*   Updated: 2021/12/08 14:52:52 by gclausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	i = 0;
 	j = 0;
-	if (!s1)
-		return (s2);
+	if (!s2 || !s1)
+		return (NULL);
 	cpy = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!cpy)
 		return (NULL);
@@ -48,6 +48,27 @@ char	*ft_strjoin(char *s1, char *s2)
 		j++;
 	}
 	cpy[i] = '\0';
-	printf("adresse de cpy_join : %p\n", cpy);
+	return (cpy);
+}
+
+char	*ft_strdup(char *s1)
+{
+	int		i;
+	int		len;
+	char	*cpy;
+
+	i = 0;
+	len = 0;
+	while (s1[len])
+		len++;
+	cpy = malloc(sizeof(char) * (len + 1));
+	if (!cpy)
+		return (NULL);
+	while (s1[i])
+	{
+		cpy[i] = s1[i];
+		i++;
+	}
+	cpy[i] = '\0';
 	return (cpy);
 }
