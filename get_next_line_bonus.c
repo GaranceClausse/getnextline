@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gclausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/06 14:22:55 by gclausse          #+#    #+#             */
-/*   Updated: 2021/12/09 11:57:26 by gclausse         ###   ########.fr       */
+/*   Created: 2021/12/09 11:35:12 by gclausse          #+#    #+#             */
+/*   Updated: 2021/12/09 11:44:03 by gclausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <libc.h>
 
 static char	*get_one_line(char *cpy)
@@ -84,10 +84,6 @@ static int	is_a_line(char *str)
 	else
 		return (0);
 }
-/*
-static char	*save_buffer(int nbytes, char *buffer, char *cpy)
-{
-}*/
 
 static char	*read_file(int fd, char *cpy)
 {
@@ -119,51 +115,20 @@ static char	*read_file(int fd, char *cpy)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*cpy = NULL;
+	static char	*cpy[1024];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	cpy = read_file(fd, cpy);
-	if (!cpy)
+	cpy[fd] = read_file(fd, cpy[fd]);
+	if (!cpy[fd])
 		return (NULL);
-	line = get_one_line(cpy);
+	line = get_one_line(cpy[fd]);
 	if (!line)
 	{
-		if (cpy)
-			free (cpy);
+		if (cpy[fd])
+			free (cpy[fd]);
 		return (NULL);
 	}
-	cpy = save_cpy(cpy);
+	cpy[fd] = save_cpy(cpy[fd]);
 	return (line);
-}
-
-int   main(int ac, char **av)
-{
-  char  *line;
-  int   fd1;
- 
-  if (ac)
-  {
-  fd1 = open(av[1], O_RDONLY);
-   line = get_next_line(fd1);
-  printf("ligne 1 = %s\n", line);
-  line = get_next_line(fd1);
-  printf("ligne 2 = %s\n", line);
-	line = get_next_line(fd1);
-  printf("ligne 3 = %s\n", line);
-  line = get_next_line(fd1);
-  printf("line 4 = %s\n", line);
-  line = get_next_line(fd1);
-  printf("ligne 5 = %s\n", line);
-	line = get_next_line(fd1);
-  printf("ligne 6 = %s\n", line);
-line = get_next_line(fd1);
-  printf("ligne 7 = %s\n", line);
-  line = get_next_line(fd1);
-  printf("ligne 8 = %s\n", line);
-	line = get_next_line(fd1);
-  printf("ligne 9 = %s\n", line);
-
-  }	
-	  return (0);
 }
