@@ -6,12 +6,11 @@
 /*   By: gclausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 14:22:55 by gclausse          #+#    #+#             */
-/*   Updated: 2021/12/09 11:57:26 by gclausse         ###   ########.fr       */
+/*   Updated: 2022/02/09 16:55:49 by gclausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <libc.h>
 
 static char	*get_one_line(char *cpy)
 {
@@ -50,18 +49,19 @@ static char	*save_cpy(char *cpy)
 	i = 0;
 	while (cpy[i] && cpy[i] != '\n')
 		i++;
-	if (!cpy[i])
+	if ((cpy[i] == '\n' && cpy[i + 1] == '\0') || cpy[i] == '\0')
 	{
 		free(cpy);
 		return (NULL);
 	}
-	str = malloc(sizeof(char) * (ft_strlen(cpy) - i + 1));
+	str = malloc(sizeof(char) * (ft_strlen(cpy) - i));
 	if (!str)
 	{
 		free (cpy);
 		return (NULL);
 	}
-	i++;
+	if (cpy[i] == '\n')
+		i++;
 	j = 0;
 	while (cpy[i])
 		str[j++] = cpy[i++];
@@ -84,22 +84,14 @@ static int	is_a_line(char *str)
 	else
 		return (0);
 }
-/*
-static char	*save_buffer(int nbytes, char *buffer, char *cpy)
-{
-}*/
 
 static char	*read_file(int fd, char *cpy)
 {
-	char	*buffer;
+	char	buffer[BUFFER_SIZE + 1];
 	char	*tmp;
 	int		nbytes;
 
-	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer)
-		return (NULL);
 	nbytes = 1;
-	buffer[0] = '\0';
 	while (is_a_line(cpy) == 0 && nbytes > 0)
 	{
 		nbytes = read (fd, buffer, BUFFER_SIZE);
@@ -110,9 +102,11 @@ static char	*read_file(int fd, char *cpy)
 			cpy = tmp;
 		}
 	}
-	free (buffer);
 	if (nbytes == -1)
+	{
+		free(cpy);
 		return (NULL);
+	}
 	return (cpy);
 }
 
@@ -129,8 +123,7 @@ char	*get_next_line(int fd)
 	line = get_one_line(cpy);
 	if (!line)
 	{
-		if (cpy)
-			free (cpy);
+		free (cpy);
 		return (NULL);
 	}
 	cpy = save_cpy(cpy);
@@ -145,25 +138,15 @@ int   main(int ac, char **av)
   if (ac)
   {
   fd1 = open(av[1], O_RDONLY);
+  int i = 0;
+  while (i < 9)
+  {
    line = get_next_line(fd1);
-  printf("ligne 1 = %s\n", line);
-  line = get_next_line(fd1);
-  printf("ligne 2 = %s\n", line);
-	line = get_next_line(fd1);
-  printf("ligne 3 = %s\n", line);
-  line = get_next_line(fd1);
-  printf("line 4 = %s\n", line);
-  line = get_next_line(fd1);
-  printf("ligne 5 = %s\n", line);
-	line = get_next_line(fd1);
-  printf("ligne 6 = %s\n", line);
-line = get_next_line(fd1);
-  printf("ligne 7 = %s\n", line);
-  line = get_next_line(fd1);
-  printf("ligne 8 = %s\n", line);
-	line = get_next_line(fd1);
-  printf("ligne 9 = %s\n", line);
-
+  printf("%s", line);
+  free(line);
+  i++;
+  }
+  
   }	
 	  return (0);
 }

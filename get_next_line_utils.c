@@ -6,12 +6,11 @@
 /*   By: gclausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 10:52:57 by gclausse          #+#    #+#             */
-/*   Updated: 2021/12/09 11:32:59 by gclausse         ###   ########.fr       */
+/*   Updated: 2022/02/09 16:52:37 by gclausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <libc.h>
 
 int	ft_strlen(char *str)
 {

@@ -6,7 +6,7 @@
 /*   By: gclausse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 11:35:12 by gclausse          #+#    #+#             */
-/*   Updated: 2021/12/09 11:44:03 by gclausse         ###   ########.fr       */
+/*   Updated: 2022/02/09 16:58:34 by gclausse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static char	*save_cpy(char *cpy)
 	i = 0;
 	while (cpy[i] && cpy[i] != '\n')
 		i++;
-	if (!cpy[i])
+	if ((cpy[i] == '\n' && cpy[i + 1] == '\0') || cpy[i] == '\0')
 	{
 		free(cpy);
 		return (NULL);
@@ -87,15 +87,11 @@ static int	is_a_line(char *str)
 
 static char	*read_file(int fd, char *cpy)
 {
-	char	*buffer;
+	char	buffer[BUFFER_SIZE + 1];
 	char	*tmp;
 	int		nbytes;
 
-	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer)
-		return (NULL);
 	nbytes = 1;
-	buffer[0] = '\0';
 	while (is_a_line(cpy) == 0 && nbytes > 0)
 	{
 		nbytes = read (fd, buffer, BUFFER_SIZE);
@@ -106,9 +102,11 @@ static char	*read_file(int fd, char *cpy)
 			cpy = tmp;
 		}
 	}
-	free (buffer);
 	if (nbytes == -1)
+	{
+		free(cpy)
 		return (NULL);
+	}
 	return (cpy);
 }
 
